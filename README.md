@@ -1,28 +1,76 @@
-[Official release notes](https://github.com/input-output-hk/cardano-node/releases/tag/1.29.0)
 
-## Upgrade Cardano-Node Version - 1.29.1 (latest as of September 13th 2021)
-
-
-### SSH to the relay/main node
-
+### Run script 01_install_cardano-node_dependencies - This step takes 3-5 Min's :timer_clock: to complete
 ```bash
-ssh -i <location of the pem file> username@public_ip_adress
+./cardano-scripts/stake_pool_automation_scripts/01_install_cardano-node_dependencies.sh
 ```
 
-### clone git repository
+### Run script 02_build_node_from_source_code - This step takes ~1Hr :timer_clock: to complete
 ```bash
-git clone https://github.com/luji/cardano-scripts.git
-chmod +x cardano-scripts/*
+nohup ./cardano-scripts/stake_pool_automation_scripts/02_build_node_and_configure.sh &
 ```
 
-### Run script upgrade_node_v1.2.6.2.sh in the background - script takes few hours :timer_clock: to complete
+### Run script 03_create_startup_scripts 
 ```bash
-nohup ./cardano-scripts/upgrade_node_v1.29.1.sh &
+./cardano-scripts/stake_pool_automation_scripts/03_create_startup_scripts.sh
 ```
-* `jobs` command will display status of the scripts that are running in the background 
+##### Your cardano-node is up and running!!
+* Verify status of the node - `sudo systemctl status cardano-node`
 
-* Display execution output of the `upgrade_node_v1.29.1.sh` script -  `tail -f nohup.out`
+* Restart node service - `sudo systemctl reload-or-restart cardano-node`
 
-Congratulations! Your Cardano Node is upgraded to the latest version. :partying_face:
+* Stop node service - `sudo systemctl stop cardano-node`
 
-##### Note : Future upgrade scripts can be pulled by running `git pull` command.
+* View Node logs - `journalctl --unit=cardano-node --follow`
+
+### Run script 04_install_gLiveView_monitoring_tool
+```bash
+./cardano-scripts/stake_pool_automation_scripts/04_install_gLiveView_monitoring_tool.sh
+```
+
+### Check DB Sync Status  - This step takes 6-8Hrs :timer_clock: to complete
+```bash
+$NODE_HOME/gLiveView.sh
+```
+
+----
+
+#### Wait until DB sync is completed 100%, Create an AMI from the main-node, we will use this AMI to provision relay nodes
+
+----
+
+### Stop Cardano-node
+```bash
+sudo systemctl stop cardano-node
+```
+
+### Update mainnet-topology.json file with relay node's Public elastic IP address on main_node
+```bash
+cat > $NODE_HOME/${NODE_CONFIG}-topology.json << EOF 
+ {
+    "Producers": [
+      {
+        "addr": "<RELAYNODE'S PUBLIC IP ADDRESS>",
+        "port": 6000,
+        "valency": 1
+      }
+    ]
+  }
+EOF
+```
+### Start Cardano-node
+```bash
+sudo systemctl start cardano-node
+```
+### Run script 05_generate_keys_on_main_node on main_node
+```bash
+./oro-stake-pool-github.io/stake_pool_automation_scripts/05_generate_keys_on_main_node.sh
+```
+
+### Run script 06_create_payment_stake_keys on main_mode
+```bash
+./oro-stake-pool-github.io/stake_pool_automation_scripts/06_create_payment_stake_keys.sh
+```
+
+### Run script 07_register_stake_address
+```bash
+./oro-stake-pool-github.io/stake_pool_automation_scripts/07_register_stake_address.sh
