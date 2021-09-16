@@ -16,7 +16,7 @@ curl -s -o env https://raw.githubusercontent.com/cardano-community/guild-operato
 chmod 755 gLiveView.sh
 
 sed -i env \
-    -e "s/\#CONFIG=\"\${CNODE_HOME}\/files\/config.json\"/CONFIG=\"\${NODE_HOME}\/mainnet-config.json\"/g" \
+    -e "s/\#CONFIG=\"\${CNODE_HOME}\/files\/config.json\"/CONFIG=\"\${NODE_HOME}\/${NODE_CONFIG}-config.json\"/g" \
     -e "s/\#SOCKET=\"\${CNODE_HOME}\/sockets\/node0.socket\"/SOCKET=\"\${NODE_HOME}\/db\/socket\"/g"
 
 end=`date +%s.%N`

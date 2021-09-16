@@ -1,3 +1,9 @@
+### Update folder permissions
+```bash
+chmod +x cardano-scripts/stake_pool_automation_scripts/*
+```
+
+
 
 ### Run script 01_install_cardano-node_dependencies - This step takes 3-5 Min's :timer_clock: to complete
 ```bash

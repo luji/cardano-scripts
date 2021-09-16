@@ -14,8 +14,8 @@ DIRECTORY=$NODE_HOME
 PORT=6000
 HOSTADDR=0.0.0.0
 TOPOLOGY=\${DIRECTORY}/${NODE_CONFIG}-topology.json
-DB_PATH=\${DIRECTORY}/${NODE_CONFIG}-db
-SOCKET_PATH=\${DB_PATH}/socket
+DB_PATH=\${DIRECTORY}/db
+SOCKET_PATH=\${DIRECTORY}/db/socket
 CONFIG=\${DIRECTORY}/${NODE_CONFIG}-config.json
 /usr/local/bin/cardano-node run --topology \${TOPOLOGY} --database-path \${DB_PATH} --socket-path \${SOCKET_PATH} --host-addr \${HOSTADDR} --port \${PORT} --config \${CONFIG}
 EOF
@@ -53,7 +53,7 @@ sudo chmod 644 /etc/systemd/system/cardano-node.service
 sudo systemctl daemon-reload
 sudo systemctl enable cardano-node
 
-sudo systemctl reload-or-restart cardano-node
+sudo systemctl start cardano-node
 
 end=`date +%s.%N`
 runtime=$( echo "$end - $start" | bc -l ) || true
