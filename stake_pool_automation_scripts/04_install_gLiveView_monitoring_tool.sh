@@ -17,7 +17,7 @@ chmod 755 gLiveView.sh
 
 sed -i env \
     -e "s/\#CONFIG=\"\${CNODE_HOME}\/files\/config.json\"/CONFIG=\"\${NODE_HOME}\/${NODE_CONFIG}-config.json\"/g" \
-    -e "s/\#SOCKET=\"\${CNODE_HOME}\/sockets\/node0.socket\"/SOCKET=\"\${NODE_HOME}\/db\/socket\"/g"
+    -e "s/\#SOCKET=\"\${CNODE_HOME}\/sockets\/node0.socket\"/SOCKET=\"\${NODE_HOME}\/${NODE_CONFIG}-db\/socket\"/g"
 
 end=`date +%s.%N`
 runtime=$( echo "$end - $start" | bc -l ) || true
